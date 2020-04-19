@@ -170,6 +170,7 @@ int GetMidIndex(int* arr, int left, int right)
 			return right;
 		} 
 	}
+	return right;
 }
 int QuickSortLR(int* arr, int left, int right)
 {
@@ -198,7 +199,6 @@ int QuickSortHole(int* arr, int left, int right)
 	int midValueIndex = GetMidIndex(arr, left, right);
 	swap(arr[midValueIndex], arr[right]);
 	int keyValue = arr[right];
-	int keyValue_index = right;
 
 	while(left < right)
 	{
@@ -218,6 +218,28 @@ int QuickSortHole(int* arr, int left, int right)
 	return left;
 }
 
+int QuickSortFB(int* arr, int left, int right)
+{
+	int keyIndex = GetMidIndex(arr, left, right);
+	swap(arr[keyIndex], arr[right]);
+	int keyValue = arr[right];
+	int prev = left - 1;//这里不能用0，应为还有递归
+	int cur = left;//cur找小
+	while (cur < right)
+	{
+		if (arr[cur] < keyValue)//如果cur找到比keyValue大的值就停下来
+		{
+			if (prev++ != cur)
+			{
+				prev++;
+				swap(arr[prev], arr[cur]);
+			}
+		}
+		cur++;
+	}
+	prev++;
+	return prev;
+}
 void QuickSort(int* arr, int left, int right)
 {
 	if (left >= right)
@@ -236,7 +258,7 @@ void QuickSort(int* arr, int left, int right)
 }
 int main()
 {
-	int arr[] = { 103, 102, 100, 9, 1, 2, 10000, 5, 7, 4, 8, 6, 3, 5, 111 };
+	int arr[] = { 103, 102, 100, 9, 1, 2, 10000, 5, 7, 4, 8, 0, 6, 3, 5, 111 };
 	int n = sizeof(arr) / sizeof(arr[0]);
 	//BubbleSort(arr, n);
 	//InsertSort(arr, n);
@@ -245,7 +267,7 @@ int main()
 	//SelectSort(arr, n);
 	int left = 0;
 	int right = n - 1;
-	QuickSort(arr, left, right);
+	//QuickSort(arr, left, right);
 	for (int i = 0; i < n; i++)
 	{
 		printf("%d ", arr[i]);
